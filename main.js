@@ -163,7 +163,7 @@ module.exports = "a {\r\n    cursor: pointer;\r\n}"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"alerts.length > 0\" class=\"alert alert-danger alert-sm text-center \">\n  <div *ngFor=\"let alert of alerts\">\n      <strong>Error!</strong> {{alert.message}}\n  </div>\n</div>\n<div class=\"container\">\n  <div calss=\"row col-xs-12\">\n    <div class=\"input-group\">\n      <input class=\"form-control\" [(ngModel)]=\"searchText\" placeholder=\"Search Pokemon\" (keyup)=\"search()\">  \n    </div>\n    <div class=\"text-center\">\n      <ul *ngIf=\"pager.pages && pager.pages.length\" class=\"pagination\"> \n          <li [ngClass]=\"{disabled:pager.currentPage === 1}\">\n              <a (click)=\"setPage(1)\">First</a>\n          </li>\n          <li [ngClass]=\"{disabled:pager.currentPage === 1}\">\n              <a (click)=\"setPage(pager.currentPage - 1)\">Previous</a>\n          </li>\n          <li *ngFor=\"let page of pager.pages\" [ngClass]=\"{active:pager.currentPage === page}\">\n              <a (click)=\"setPage(page)\">{{page}}</a>\n          </li>\n          <li [ngClass]=\"{disabled:pager.currentPage === pager.totalPages}\">\n              <a (click)=\"setPage(pager.currentPage + 1)\">Next</a>\n          </li>\n          <li [ngClass]=\"{disabled:pager.currentPage === pager.totalPages}\">\n              <a (click)=\"setPage(pager.totalPages)\">Last</a>\n          </li>\n      </ul>\n  </div>\n  </div>\n  <div class= \"container\" *ngIf=\"loadingMessage\">\n    Loading.....\n  </div>\n  <div class=\"container\">\n  <div class=\"row\">\n  <div *ngFor=\"let pokemon of listOfPokemonsToDisplay\" class=\"col-12 col-md-6 col-xl-3\">\n    <img src=\"/assets/images/{{pokemon.id}}.png\">\n      {{pokemon.id}}. {{pokemon.name}}\n  </div>\n  </div>\n</div>\n</div>\n"
+module.exports = "<div *ngIf=\"alerts.length > 0\" class=\"alert alert-danger alert-sm text-center \">\n  <div *ngFor=\"let alert of alerts\">\n      <strong>Error!</strong> {{alert.message}}\n  </div>\n</div>\n<div class=\"container\">\n  <div class=\"input-group\">\n    <input class=\"form-control\" [(ngModel)]=\"searchText\" placeholder=\"Search Pokemon\" (keyup)=\"search()\">  \n  </div>\n  <div class=\"text-center\">\n    <ul *ngIf=\"pager.pages && pager.pages.length\" class=\"pagination\"> \n        <li [ngClass]=\"{disabled:pager.currentPage === 1}\">\n            <a (click)=\"setPage(1)\"> << </a>\n        </li>\n        <li [ngClass]=\"{disabled:pager.currentPage === 1}\">\n            <a (click)=\"setPage(pager.currentPage - 1)\"> < </a>\n        </li>\n        <li *ngFor=\"let page of pager.pages\" [ngClass]=\"{active:pager.currentPage === page}\">\n            <a (click)=\"setPage(page)\">{{page}}</a>\n        </li>\n        <li [ngClass]=\"{disabled:pager.currentPage === pager.totalPages}\">\n            <a (click)=\"setPage(pager.currentPage + 1)\"> > </a>\n        </li>\n        <li [ngClass]=\"{disabled:pager.currentPage === pager.totalPages}\">\n            <a (click)=\"setPage(pager.totalPages)\"> >> </a>\n        </li>\n    </ul>\n  </div>\n  <div class= \"container\" *ngIf=\"loadingMessage\">\n    Loading.....\n  </div>\n</div>\n\n<div class=\"container\">\n  <div class=\"row\">\n    <div *ngFor=\"let pokemon of listOfPokemonsToDisplay\" class=\"col-12 col-md-3 col-xl-3\">\n      <img src=\"/assets/images/{{pokemon.id}}.png\">\n        {{pokemon.id}}. {{pokemon.name}}\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -247,7 +247,7 @@ var BodyComponent = /** @class */ (function () {
     };
     BodyComponent.prototype.search = function () {
         var _this = this;
-        this.filteredPokemons = this.pokemons.filter(function (pokemons) { return pokemons.name.indexOf(_this.searchText) !== -1; });
+        this.filteredPokemons = this.pokemons.filter(function (pokemons) { return pokemons.name.indexOf(_this.searchText.toLocaleLowerCase()) !== -1; });
         this.setPage(1);
     };
     BodyComponent = __decorate([
@@ -382,10 +382,9 @@ var PagerService = /** @class */ (function () {
     }
     PagerService.prototype.getPager = function (totalItems, currentPage, pageSize) {
         if (currentPage === void 0) { currentPage = 1; }
-        if (pageSize === void 0) { pageSize = 10; }
+        if (pageSize === void 0) { pageSize = 20; }
         // calculate total pages
         var totalPages = Math.ceil(totalItems / pageSize);
-        console.log(totalPages);
         var startPage, endPage;
         if (totalPages <= 5) {
             startPage = 1;
@@ -415,9 +414,7 @@ var PagerService = /** @class */ (function () {
         var startIndex = (currentPage - 1) * pageSize;
         var endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
         // create an array of pages to ng-repeat in the pager control
-        console.log(startPage + 'dg' + endPage);
         var pages = Array.from(Array((endPage + 1) - startPage).keys()).map(function (i) { return startPage + i; });
-        console.log(pages);
         // return object with all pager properties required by the view
         return {
             totalItems: totalItems,
